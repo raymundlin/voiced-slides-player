@@ -1,0 +1,27 @@
+{
+  "name": "voiced-slides-player",
+  "version": "1.0.0",
+  "description": "slide player that includes voice narration",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/raymundlin/voiced-slides-player.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/raymundlin/voiced-slides-player/issues"
+  },
+  "homepage": "https://github.com/raymundlin/voiced-slides-player#readme",
+  "dependencies": {
+    "express": "^5.2.1",
+    "express-rate-limit": "^8.3.1",
+    "express-session": "^1.19.0"
+  }
+}

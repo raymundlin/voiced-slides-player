@@ -1,3 +1,7 @@
+# Slides content (keep only .gitkeep)
+Slides/*
+!Slides/.gitkeep
+
 # Logs
 logs
 *.log
