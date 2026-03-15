@@ -330,12 +330,31 @@ app.get('/play/:name', requireAuth, apiLimiter, (req, res) => {
       font-size: 1.2rem;
       text-align: center;
     }
+    #prompt {
+      display: none;
+      position: absolute;
+      bottom: 2rem;
+      left: 50%;
+      transform: translateX(-50%);
+      color: #fff;
+      font-size: 1.4rem;
+      background: rgba(0, 0, 0, 0.6);
+      padding: 0.6rem 1.4rem;
+      border-radius: 0.5rem;
+      animation: blink 1.2s step-start infinite;
+      white-space: nowrap;
+    }
+    @keyframes blink {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0; }
+    }
   </style>
 </head>
 <body>
   <div id="slide-container">
     <img id="slide-img" alt="Slide">
     <div id="status">Loading presentation…</div>
+    <div id="prompt">Press Enter to begin…</div>
   </div>
   <audio id="audio-player" preload="auto"></audio>
   <script>
@@ -344,6 +363,7 @@ app.get('/play/:name', requireAuth, apiLimiter, (req, res) => {
       const statusEl = document.getElementById('status');
       const imgEl = document.getElementById('slide-img');
       const audioEl = document.getElementById('audio-player');
+      const promptEl = document.getElementById('prompt');
 
       let slides = [];
       try {
@@ -376,13 +396,33 @@ app.get('/play/:name', requireAuth, apiLimiter, (req, res) => {
       statusEl.style.display = 'none';
       imgEl.style.display = 'block';
 
+      // Display the first slide (title page) and wait for Enter
+      imgEl.src = slides[0].image;
+      await new Promise(resolve => {
+        imgEl.onload = resolve;
+        imgEl.onerror = resolve;
+      });
+      await new Promise(resolve => {
+        promptEl.style.display = 'block';
+        function onKey(e) {
+          if (e.key === 'Enter') {
+            promptEl.style.display = 'none';
+            document.removeEventListener('keydown', onKey);
+            resolve();
+          }
+        }
+        document.addEventListener('keydown', onKey);
+      });
+
       for (let i = 0; i < slides.length; i++) {
         const slide = slides[i];
-        imgEl.src = slide.image;
-        await new Promise(resolve => {
-          imgEl.onload = resolve;
-          imgEl.onerror = resolve;
-        });
+        if (imgEl.src !== slide.image) {
+          imgEl.src = slide.image;
+          await new Promise(resolve => {
+            imgEl.onload = resolve;
+            imgEl.onerror = resolve;
+          });
+        }
         await playAudio(slide.audio);
         if (i < slides.length - 1) {
           await sleep(3000);
