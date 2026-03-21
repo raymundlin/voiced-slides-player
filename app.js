@@ -11,6 +11,8 @@ const crypto = require('crypto');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
+const SLIDE_DELAY = parseInt(process.env.SLIDE_DELAY, 10) || 1000;
+const PRESENTATION_END_DELAY = parseInt(process.env.PRESENTATION_END_DELAY, 10) || 3000;
 const MAGIC = process.env.MAGIC;
 if (!MAGIC) {
   console.warn('WARNING: MAGIC env var is not set. Set the MAGIC environment variable to protect this application.');
@@ -425,12 +427,12 @@ app.get('/play/:name', requireAuth, apiLimiter, (req, res) => {
         }
         await playAudio(slide.audio);
         if (i < slides.length - 1) {
-          await sleep(3000);
+          await sleep(${SLIDE_DELAY});
         }
       }
 
       // Presentation finished
-      await sleep(5000);
+      await sleep(${PRESENTATION_END_DELAY});
       window.location.href = '/presentations';
     })();
   </script>
