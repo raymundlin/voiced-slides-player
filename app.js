@@ -10,6 +10,7 @@ const fs = require('fs');
 const crypto = require('crypto');
 
 const app = express();
+app.set('trust proxy', 1);
 const PORT = process.env.PORT || 3000;
 const SLIDE_DELAY = parseInt(process.env.SLIDE_DELAY, 10) || 1000;
 const PRESENTATION_END_DELAY = parseInt(process.env.PRESENTATION_END_DELAY, 10) || 3000;
